@@ -7,16 +7,14 @@
  *
  * @category     DiscourseAPI
  * @package      DiscourseAPI
- * @author       Original author DiscourseHosting <richard@discoursehosting.com>
- * Additional work, timolaine, richp10 and others..
- * @copyright    2013, DiscourseHosting.com
+ * @author       Brad Morrical
  * @license      http://www.gnu.org/licenses/gpl-2.0.html GPLv2
- * @link         https://github.com/richp10/discourse-api-php
+ * @link         https://github.com/bmorrical/discourse-api-php
  *
  * @noinspection MoreThanThreeArgumentsInspection
  **/
 
-namespace richp10\discourseAPI;
+namespace bmorrical\discourseAPI;
 
 class DiscourseAPI
 {
