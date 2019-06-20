@@ -1,12 +1,12 @@
 {
-    "name": "richp10/discourse-api-php",
+    "name": "bmorrical/discourse-api-php",
     "description": "Packed version of the Discourse API PHP library from discoursehosting.",
     "license": "GPL-2.0-or-later",
     "keywords": ["discourse"],
     "authors": [
         {
-            "name": "richp10",
-            "email": "richp10@gmail.com"
+            "name": "bmorrical",
+            "email": "creative@morrical.net"
         }
     ],
     "require": { },
