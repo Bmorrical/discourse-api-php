@@ -1,2 +1,7 @@
 .idea/
 .DS_Store
+/vendor/
+/app/phpunit.xml
+/phpunit.xml
+/composer.phar
+/composer.lock

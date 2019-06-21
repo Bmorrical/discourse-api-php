@@ -1,14 +1,24 @@
-# discourse-api-php
+# PHP Library for Discourse API
 
-###For Documentation See: /example.php
+## This is a guzzle based composer PHP library for connecting to Discourse API
 
-This is a composer packaged version of the PHP library for accessing the Discourse API.
+#### How Do I Install This Library With Composer:
 
-Previous forks and work might include:
+` composer require bmorrical/discourse-api-php `
 
-https://github.com/richp10/discourse-api-php
-https://github.com/discoursehosting/discourse-api-php
-https://github.com/sspssp/discourse-api-php
-https://github.com/kazad/discourse-api-php
-https://github.com/timolaine/discourse-api-php
+#### How Do I Use The Legacy Version Of This Library:
+
+> see `legacy-example.php ` in folder root
+
+#### Legacy contributors, we salute your contributions:
+
+> https://github.com/richp10/discourse-api-php
+
+> https://github.com/discoursehosting/discourse-api-php
+
+> https://github.com/sspssp/discourse-api-php
+
+> https://github.com/kazad/discourse-api-php
+
+> https://github.com/timolaine/discourse-api-php
 

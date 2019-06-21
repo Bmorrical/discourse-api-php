@@ -1,0 +1,6 @@
+v0.1.0
+- Added support for GuzzleHttp/Guzzle
+- Added method for Approve User (not to be confused with Active User)
+- Documentation
+- Create new DisourseAPI.php
+- Split legacy into its own class
