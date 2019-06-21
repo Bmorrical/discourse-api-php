@@ -3,4 +3,4 @@ v0.1.0
 - Added method for Approve User (not to be confused with Active User)
 - Documentation
 - Create new DisourseAPI.php
-- Split legacy into its own class
+- Split legacy into its own class DiscourseLegacyApi.php
