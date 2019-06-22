@@ -41,11 +41,47 @@ class DiscourseAPI
     }
 
     /**
+     * Activate a User by ID
+     *
      * @param int $userId
-     * @return string
+     * @return array
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    function approveUserById(int $userId)
+    function activateUserById(int $userId)
+    {
+        $query = [
+            'api_key' => $this->apiKey,
+            'api_username' => $this->apiUsername,
+        ];
+        $uri = sprintf('/admin/users/%s/activate?%s', $userId, http_build_query($query));
+
+        try {
+            $response = $this->client->put($uri);
+        } catch (\Throwable $exception) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Could not approve user id: %s. Error Message: %s',
+                    $userId,
+                    $exception->getMessage()
+                )
+            );
+        }
+
+        return [
+            'success' => true,
+            'errors' => [],
+            'data' => $response,
+        ];
+    }
+
+    /**
+     * Approve a User by ID
+     *
+     * @param int $userId
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    function approveUserById(int $userId): array
     {
         $query = [
             'api_key' => $this->apiKey,
@@ -58,12 +94,17 @@ class DiscourseAPI
         } catch (\Throwable $exception) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'Could not approve user id: %s',
-                    $userId
+                    'Could not approve user id: %s. Error Message: %s',
+                    $userId,
+                    $exception->getMessage()
                 )
             );
         }
 
-        return $response;
+        return [
+            'success' => true,
+            'errors' => [],
+            'data' => $response,
+        ];
     }
 }

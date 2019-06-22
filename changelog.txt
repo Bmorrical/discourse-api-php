@@ -1,3 +1,6 @@
+v0.1.1
+- Added method for Activate User (not to be confused with Approve User)
+
 v0.1.0
 - Added support for GuzzleHttp/Guzzle
 - Added method for Approve User (not to be confused with Active User)
