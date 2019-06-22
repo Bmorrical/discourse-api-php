@@ -7,6 +7,10 @@ This is a guzzle based composer PHP library for connecting to Discourse API
 
 ` composer require bmorrical/discourse-api-php `
 
+#### How Do I See What's New?
+
+> see `/changelog.txt` for release details
+
 
 #### How Do I Use The Latest OOP Version Of This Library:
 
