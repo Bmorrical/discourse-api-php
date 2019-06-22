@@ -10,17 +10,17 @@ This is a guzzle based composer PHP library for connecting to Discourse API
 
 #### How Do I See What's New?
 
-     see `/changelog.txt` for release details
+     See /changelog.txt for release details
 
 
 #### How Do I Use The Latest OOP Version Of This Library:
 
-     see `/examples/oop-example.php ` in folder root
+     See /examples/oop-example.php in folder root
 
 
 #### How Do I Use The Legacy Version Of This Library:
 
-     see `/examples/legacy-example.php ` in folder root
+     See /examples/legacy-example.php in folder root
 
 
 #### Legacy contributors, I salute your contributions:
