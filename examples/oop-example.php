@@ -56,7 +56,6 @@ class HelpService
      */
     public function addNewUser(array $filters): array
     {
-
         $result = $this->createUser($filters);
         if (!$result['success']) {
             return [
@@ -65,7 +64,6 @@ class HelpService
                 'data' => [],
             ];
         }
-
         $user = $this->getUserIdByUsername($filters);
         if (!$result['success']) {
             return [
