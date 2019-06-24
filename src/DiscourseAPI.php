@@ -49,52 +49,78 @@ class DiscourseAPI
      */
     public function createUser(array $filters): array
     {
-        $honeypot = $this->getHoneypot();
+        $user = $this->getUserIdByUsername($filters['username']);
 
-        if ($honeypot['success']) {
-            $query = [
-                'name' => $filters['name'],
-                'username' => $filters['username'],
-                'email' => $filters['email'],
-                'password' => $filters['password'],
+        // Does user already exist?
+        if ($user['success']) {
+            // Try to unsuspend the user
+            $response = $this->unsuspendUserByID($user['data']);
 
-                // activate and approve the user
-                'active' => true,
-                'approved' => true,
-
-                // honepot
-                'challenge' => strrev($honeypot['data']->challenge),
-                'password_confirmation' => $honeypot['data']->value,
-
-                // api
-                'api_key' => $this->apiKey,
-                'api_username' => $this->apiUsername,
-            ];
-
-            try {
-                $response = $this->client->post('/users', http_build_query($query));
-            } catch (\Throwable $exception) {
-                throw new InvalidArgumentException(
-                    sprintf(
-                        'Could not create user with username: %s. Error Message: %s',
-                        $filters['username'],
-                        $exception->getMessage()
-                    )
-                );
+            if ($response['success']) {
+                return [
+                    'success' => true,
+                    'errors' => [],
+                    'data' => [
+                        'user_active' => true,
+                        'user_id' => $user['data'],
+                        'message' => 'User was sucessfully unsuspended via account creation.',
+                    ],
+                ];
+            } else {
+                return [
+                    'success' => true,
+                    'errors' => ['Something went wrong, user was found but could not be unsuspended.'],
+                    'data' => [],
+                ];
             }
+        } else {
+            $honeypot = $this->getHoneypot();
 
-            $result = json_decode($response);
-        }
-        if ($result->success) {
-            return [
-                'success' => true,
-                'errors' => [],
-                'data' => [
-                    'user_active' => $result->active,
-                    'user_id' => $result->user_id,
-                    'message' => $result->message,
-                ],
-            ];
+            if ($honeypot['success']) {
+                $query = [
+                    'name' => $filters['name'],
+                    'username' => $filters['username'],
+                    'email' => $filters['email'],
+                    'password' => $filters['password'],
+
+                    // activate and approve the user
+                    'active' => true,
+                    'approved' => true,
+
+                    // honepot
+                    'challenge' => strrev($honeypot['data']->challenge),
+                    'password_confirmation' => $honeypot['data']->value,
+
+                    // api
+                    'api_key' => $this->apiKey,
+                    'api_username' => $this->apiUsername,
+                ];
+
+                try {
+                    $response = $this->client->post('/users', http_build_query($query));
+                } catch (\Throwable $exception) {
+                    throw new InvalidArgumentException(
+                        sprintf(
+                            'Could not create user with username: %s. Error Message: %s',
+                            $filters['username'],
+                            $exception->getMessage()
+                        )
+                    );
+                }
+
+                $result = json_decode($response);
+            }
+            if ($result->success) {
+                return [
+                    'success' => true,
+                    'errors' => [],
+                    'data' => [
+                        'user_active' => $result->active,
+                        'user_id' => $result->user_id,
+                        'message' => $result->message,
+                    ],
+                ];
+            }
         }
 
         return [
