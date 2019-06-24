@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Class HelpService
  * @package App\Service
  */
-class HelpService
+class OopHelpService
 {
     /**
      * @var string $apiUrl

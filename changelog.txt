@@ -1,4 +1,9 @@
 v0.1.1
+- Methods added:
+-- Suspend User
+-- Unsuspend User
+
+v0.1.1
 - Added method for Activate User (not to be confused with Approve User)
 
 v0.1.0
