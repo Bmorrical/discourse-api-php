@@ -5,13 +5,13 @@ namespace App\Service;
 use bmorrical\discourseAPI\DiscourseAPI;
 use bmorrical\discourseAPI\DiscourseLegacyAPI;
 use Psr\Log\InvalidArgumentException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Class HelpService
  * @package App\Service
  */
-class OopHelpService
+class HelpService
 {
     /**
      * @var string $apiUrl
@@ -48,43 +48,20 @@ class OopHelpService
     }
 
     /**
-     * Call from controller for request to add new user
+     * Add New User Request
      *
      * @param array $filters
      * @return array
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function addNewUser(array $filters): array
     {
-        $result = $this->createUser($filters);
-        if (!$result['success']) {
+        // Create the user
+        $user = $this->createNewUserAction($filters);
+        if (!$user['success']) {
             return [
                 'success' => false,
                 'errors' => ['User was not created successfully.'],
-                'data' => [],
-            ];
-        }
-        $user = $this->getUserIdByUsername($filters);
-        if (!$result['success']) {
-            return [
-                'success' => false,
-                'errors' => ['Could not get user by Username.'],
-                'data' => [],
-            ];
-        }
-        $result = $this->activateUserById($user['data']->id);
-        if (!$result['success']) {
-            return [
-                'success' => false,
-                'errors' => ['Could not get user by Username.'],
-                'data' => [],
-            ];
-        }
-        $result = $this->approveUserById($user['data']->id);
-        if (!$result['success']) {
-            return [
-                'success' => false,
-                'errors' => ['Could not get user by Username.'],
                 'data' => [],
             ];
         }
@@ -97,101 +74,146 @@ class OopHelpService
     }
 
     /**
+     * Suspend User Request
+     *
+     * @param array $filters
+     * @return array
+     * @throws GuzzleException
+     */
+    public function suspendUser(array $filters): array
+    {
+        $userId = $this->getUserIdByUsernameAction($filters['username']);
+        $response = $this->suspendUserByUserIdAction($userId['data']);
+
+        if (!$response['success']) {
+            return [
+                'success' => false,
+                'errors' => ['User was not suspended successfully.'],
+                'data' => [],
+            ];
+        }
+
+        return [
+            'success' => true,
+            'errors' => [],
+            'data' => ['User was suspended successfully'],
+        ];
+    }
+
+    /**
+     * Call from controller for request to add new user
+     *
+     * @param array $filters
+     * @return array
+     * @throws GuzzleException
+     */
+    public function unsuspendUser(array $filters): array
+    {
+        $userId = $this->getUserIdByUsernameAction($filters['username']);
+        $response = $this->unsuspendUserByUserIdAction($userId['data']);
+
+        if (!$response['success']) {
+            return [
+                'success' => false,
+                'errors' => ['User was not unsuspended successfully.'],
+                'data' => [],
+            ];
+        }
+
+        return [
+            'success' => true,
+            'errors' => [],
+            'data' => ['User was unsuspended successfully'],
+        ];
+    }
+
+
+/// PRIVATE MEMBERS
+///
+///
+
+    /**
+     * Gets the User Id by Username
+     *
+     * @param string $username
+     * @return array
+     * @throws GuzzleException
+     */
+    private function getUserIdByUsernameAction(string $username): array
+    {
+        try {
+            return $this->api->getUserIdByUsername($username);
+        } catch (InvalidArgumentException $exception) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Could not get User Id for username: %s',
+                    $username
+                )
+            );
+        }
+    }
+
+    /**
      * Create User
      *
      * @param array $filters
      * @return array
+     * @throws GuzzleException
      */
-    private function createUser(array $filters = []): array
+    private function createNewUserAction(array $filters = []): array
     {
         try {
-            // create user
-            $response = $this->legacyApi->createUser(
-                $filters['name'],
-                $filters['username'],
-                $filters['email'],
-                $filters['password']
-            );
-        } catch (NotFoundHttpException $exception) {
-            throw new NotFoundHttpException('Could not create user');
-        }
-
-        if (!$response->apiresult->success) {
-            throw new NotFoundHttpException(sprintf(
-                'User was not created successfully: %s',
-                $response->apiresult->message
-            ));
-        } else {
-            return [
-                'success' => true,
-                'error' => [],
-                'data' => $response->apiresult->message
-            ];
-        }
-    }
-
-    /**
-     * Get a User Username
-     *
-     * @param array $filters
-     * @return array
-     */
-    private function getUserIdByUsername(array $filters = []): array
-    {
-        try {
-            // get user
-            $response = $this->legacyApi->getUserByUsername(
-                $filters['username']
-            );
-        } catch (NotFoundHttpException $exception) {
-            throw new NotFoundHttpException('Could not create user');
-        }
-
-        if (200 !== $response->http_code) {
-            throw new NotFoundHttpException(
+            return $this->api->createUser($filters);
+        } catch (InvalidArgumentException $exception) {
+            throw new InvalidArgumentException(
                 sprintf(
-                    'User was not found successfully: %s',
-                    $response->apiresult->errors
+                    'Could not create user for username: %s',
+                    $filters['username']
                 )
             );
-        } else {
-            return [
-                'success' => true,
-                'error' => [],
-                'data' => $response->apiresult->user
-            ];
         }
     }
 
     /**
-     * Activate a user by ID
+     * Suspend User by User ID
      *
-     * @param int $user_id
+     * @param int $userId
      * @return array
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    private function activateUserById(int $user_id): array
+    private function suspendUserByUserIdAction(int $userId): array
     {
         try {
-            return $this->api->activateUserById($user_id);
+            return $this->api->suspendUserById($userId);
         } catch (InvalidArgumentException $exception) {
-            throw new InvalidArgumentException('Could not activate user');
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Could not suspend user with id: %s',
+                    $userId
+                )
+            );
         }
     }
 
+
     /**
-     * Approve a user by ID
+     * Unsuspend User by User ID
      *
-     * @param int $user_id
+     * @param int $userId
      * @return array
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    private function approveUserById(int $user_id): array
+    private function unsuspendUserByUserIDAction(int $userId): array
     {
         try {
-            return $this->api->approveUserById($user_id);
+            return $this->api->unsuspendUserById($userId);
         } catch (InvalidArgumentException $exception) {
-            throw new InvalidArgumentException('Could not approve user');
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Could not unsuspend user with id: %s',
+                    $userId
+                )
+            );
         }
     }
 }
