@@ -1,3 +1,6 @@
+v0.1.3
+- Updated OOP examples
+
 v0.1.2
 - Methods added:
 -- Suspend User
