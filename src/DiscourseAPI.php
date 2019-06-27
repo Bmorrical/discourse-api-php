@@ -49,6 +49,9 @@ class DiscourseAPI
      */
     public function createUser(array $filters): array
     {
+        echo "here";
+        die;
+
         $user = $this->getUserIdByUsername($filters['username']);
 
         // Does user already exist?
@@ -217,13 +220,11 @@ class DiscourseAPI
         try {
             $response = json_decode($this->client->get($uri));
         } catch (\Throwable $exception) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Could not get user by username: %s. Error Message: %s',
-                    $username,
-                    $exception->getMessage()
-                )
-            );
+            return [
+                'success' => false,
+                'errors' => [sprintf('User does not exist for username: %s', $username)],
+                'data' => [],
+            ];
         }
 
         return [
