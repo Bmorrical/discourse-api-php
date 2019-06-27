@@ -49,9 +49,6 @@ class DiscourseAPI
      */
     public function createUser(array $filters): array
     {
-        echo "here";
-        die;
-
         $user = $this->getUserIdByUsername($filters['username']);
 
         // Does user already exist?
