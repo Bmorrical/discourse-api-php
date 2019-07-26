@@ -1,3 +1,12 @@
+v0.1.7
+- recent topics
+
+v0.1.6
+- cleanup debug
+
+v0.1.5
+- cleanup debug
+
 v0.1.4
 - Fixing exception when user doesn't exist
 

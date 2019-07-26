@@ -302,6 +302,41 @@ class DiscourseAPI
     }
 
     /**
+     * Get the Latest Topics
+     *
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getLatestTopics(): array
+    {
+        $query = [
+            'order' => 'created',
+        ];
+        $uri = sprintf('latest.json?%s', http_build_query($query));
+
+        try {
+            $response = json_decode($this->client->get($uri));
+        } catch (\Throwable $exception) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Could not get latest topics. Error Message: %s',
+                    $exception->getMessage()
+                )
+            );
+        }
+
+        return [
+            'success' => true,
+            'errors' => [],
+            'data' => $response->topic_list->topics,
+        ];
+    }
+
+///////////////////////
+/////// PRIVATE MEMBERS
+///////////////////////
+
+    /**
      * Gets a unique value and challenge for purpose of validating some requests via honeypot
      *
      * @return array
